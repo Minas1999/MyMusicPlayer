@@ -6,6 +6,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    final String MY_LOGS = "MyLog";
     ListView myListViewForSong;
     String[] items;
 
@@ -86,21 +88,23 @@ public class MainActivity extends AppCompatActivity {
         items = new String[mySongs.size()];
 
         for (int i = 0; i < mySongs.size(); i++) {
-            items[i]= mySongs.get(i).getName().toString().replace(".mp3","").replace(".mp3", "");
-
+            items[i]= mySongs.get(i).getName().replace(".mp3","");
         }
-        ArrayAdapter<String>myAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, items);
+
+        ArrayAdapter<String>myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         myListViewForSong.setAdapter(myAdapter);
+
 
         myListViewForSong.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 String songName = myListViewForSong.getItemAtPosition(position).toString();
+                Log.i(MY_LOGS, songName);
 
                 startActivity(new Intent(getApplicationContext(), PlayerActivity.class)
-                        .putExtra("songs", mySongs).putExtra("songname",songName)
+                        .putExtra("songs", mySongs)
+                        .putExtra("songname",songName)
                         .putExtra("pos", position));
 
             }

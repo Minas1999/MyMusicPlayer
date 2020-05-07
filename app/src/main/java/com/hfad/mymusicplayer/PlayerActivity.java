@@ -11,7 +11,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -23,6 +26,7 @@ public class PlayerActivity extends AppCompatActivity {
     Button buttonNext, buttonPrevious, buttonPause;
     TextView songText;
     SeekBar songSeekBar;
+    ImageView imageView;
 
     static MediaPlayer myMediaPlayer;
     int position;
@@ -35,7 +39,17 @@ public class PlayerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home)
             onBackPressed();
+
         return super.onOptionsItemSelected(item);
+    }
+
+    final Animation[] animator = new Animation[1];
+    public void Animate()
+    {
+        if(myMediaPlayer.isPlaying()) {
+            animator[0] = AnimationUtils.loadAnimation(this, R.anim.rotate);
+            imageView.setAnimation(animator[0]);
+        }
     }
 
     @SuppressLint("NewApi")
@@ -51,6 +65,8 @@ public class PlayerActivity extends AppCompatActivity {
         songSeekBar = findViewById(R.id.seekBar);
 
         songText = findViewById(R.id.songLabel);
+
+        imageView = findViewById(R.id.musicPlayerImage);
 
         getSupportActionBar().setTitle("Now Playing");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -84,6 +100,9 @@ public class PlayerActivity extends AppCompatActivity {
             myMediaPlayer.stop();
             myMediaPlayer.release();
         }
+
+
+
 
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
@@ -128,10 +147,14 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
+
         buttonPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 songSeekBar.setMax(myMediaPlayer.getDuration());
+
+
+
                 if(myMediaPlayer.isPlaying())
                 {
                     buttonPause.setBackgroundResource(R.drawable.ic_play);
@@ -144,6 +167,8 @@ public class PlayerActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Animate();
 
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +184,7 @@ public class PlayerActivity extends AppCompatActivity {
                 songText.setText(sname);
 
                 myMediaPlayer.start();
+                Animate();
             }
         });
 
@@ -178,6 +204,7 @@ public class PlayerActivity extends AppCompatActivity {
                 songText.setText(sname);
 
                 myMediaPlayer.start();
+                Animate();
             }
         });
 
